@@ -1,0 +1,104 @@
+{% extends 'bookings/base.html' %}
+{% load static %}
+
+{% block title %}My Bookings | HotelHub Hotels{% endblock %}
+
+{% block content %}
+<div class="profile-layout">
+    
+    <!-- Profile Sidebar -->
+    <div class="profile-card">
+        <div class="profile-avatar">
+            {{ request.user.username|slice:":1"|upper }}
+        </div>
+        <h2 class="profile-username">{{ request.user.username }}</h2>
+        <p class="profile-email">{{ request.user.email|default:"No email set" }}</p>
+        
+        <div class="profile-stats">
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">{{ active_count }}</div>
+                <div class="profile-stat-lbl">Active</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">{{ completed_count }}</div>
+                <div class="profile-stat-lbl">Completed</div>
+            </div>
+            <div class="profile-stat-box">
+                <div class="profile-stat-val">{{ cancelled_count }}</div>
+                <div class="profile-stat-lbl">Cancelled</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bookings Timeline/List -->
+    <div>
+        <h2 class="section-title">Your Reservations</h2>
+        
+        {% if bookings %}
+            <div class="bookings-section">
+                {% for booking in bookings %}
+                    <div class="booking-card">
+                        <div class="booking-card-thumb">
+                            <img src="{{ booking.room.room_type.image_url }}" alt="{{ booking.room.room_type.name }}">
+                        </div>
+                        <div class="booking-card-content">
+                            <div class="booking-card-header">
+                                <h3 class="booking-card-title">{{ booking.room.room_type.name }}</h3>
+                                <span class="booking-badge {{ booking.status|lower }}">
+                                    {{ booking.status }}
+                                </span>
+                            </div>
+                            
+                            <div class="booking-card-dates">
+                                <i class="ri-calendar-line"></i>
+                                <span>{{ booking.check_in|date:"M d, Y" }}</span>
+                                <i class="ri-arrow-right-line" style="font-size: 0.8rem;"></i>
+                                <span>{{ booking.check_out|date:"M d, Y" }}</span>
+                                <span style="color: var(--text-light); font-size: 0.85rem; margin-left: 0.5rem;">
+                                    ({{ booking.duration_nights }} night{{ booking.duration_nights|pluralize }})
+                                </span>
+                            </div>
+                            
+                            <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                                <i class="ri-door-open-line"></i> Room Number: <strong>{{ booking.room.room_number }}</strong>
+                            </div>
+
+                            <div class="booking-card-price">
+                                Total Paid: ${{ booking.total_price }}
+                            </div>
+
+                            <div class="booking-card-actions">
+                                <div>
+                                    {% if booking.status == 'Completed' %}
+                                        <a href="{% url 'room_detail' booking.room.room_type.id %}#reviews" class="btn btn-secondary btn-sm">
+                                            <i class="ri-chat-smile-2-line"></i> Write a Review
+                                        </a>
+                                    {% endif %}
+                                </div>
+                                
+                                {% if booking.can_be_cancelled %}
+                                    <form action="{% url 'cancel_booking' %}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this booking? This action is permanent.');">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">
+                                            <i class="ri-close-circle-line"></i> Cancel Booking
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-state-icon"><i class="ri-suitcase-line"></i></div>
+                <h3>No Bookings Yet</h3>
+                <p>You haven't made any hotel reservations yet. Explore our rooms and find your dream stay.</p>
+                <a href="{% url 'home' %}" class="btn btn-primary">Find Rooms Now</a>
+            </div>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

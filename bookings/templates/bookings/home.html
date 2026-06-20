@@ -1,0 +1,132 @@
+{% extends 'bookings/base.html' %}
+{% load static %}
+
+{% block title %}Find Rooms | HotelHub Hotels{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <h1>Experience Luxury & Comfort at <span>HotelHub</span></h1>
+    <p>Discover hand-crafted rooms tailored for your ultimate relaxation. Book your perfect stay with ease.</p>
+</section>
+
+<!-- Search Panel -->
+<section class="search-panel">
+    <form action="{% url 'home' %}" method="GET" class="search-form">
+        <div class="form-group">
+            <label for="check_in"><i class="ri-calendar-check-line"></i> Check-in Date</label>
+            <input type="date" id="check_in" name="check_in" class="form-control" value="{{ check_in }}" min="{{ today }}">
+        </div>
+        <div class="form-group">
+            <label for="check_out"><i class="ri-calendar-close-line"></i> Check-out Date</label>
+            <input type="date" id="check_out" name="check_out" class="form-control" value="{{ check_out }}">
+        </div>
+        <div class="form-group">
+            <label for="capacity"><i class="ri-user-line"></i> Guests</label>
+            <select id="capacity" name="capacity" class="form-control">
+                <option value="" {% if not capacity %}selected{% endif %}>Any Guests</option>
+                <option value="1" {% if capacity == '1' %}selected{% endif %}>1 Guest</option>
+                <option value="2" {% if capacity == '2' %}selected{% endif %}>2 Guests</option>
+                <option value="3" {% if capacity == '3' %}selected{% endif %}>3 Guests</option>
+                <option value="4" {% if capacity == '4' %}selected{% endif %}>4+ Guests</option>
+            </select>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary btn-full" style="height: 46px;">
+                <i class="ri-search-line"></i> Search
+            </button>
+        </div>
+    </form>
+</section>
+
+<!-- Rooms Grid -->
+<section>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+        <h2 class="section-title" style="margin-bottom: 0;">
+            {% if searched %}
+                Available Accommodation
+            {% else %}
+                Our Premium Rooms
+            {% endif %}
+        </h2>
+        {% if searched %}
+            <a href="{% url 'home' %}" class="btn btn-secondary btn-sm"><i class="ri-refresh-line"></i> Reset Filters</a>
+        {% endif %}
+    </div>
+
+    {% if room_types %}
+        <div class="room-grid">
+            {% for rt in room_types %}
+                <div class="room-card">
+                    <div class="room-card-image">
+                        <!-- Use image_url from DB -->
+                        <img src="{{ rt.image_url }}" alt="{{ rt.name }}">
+                        
+                        <div class="room-card-badge-capacity">
+                            <i class="ri-user-smile-line"></i> up to {{ rt.capacity }}
+                        </div>
+                        
+                        {% if rt.average_rating > 0 %}
+                            <div class="room-card-badge">
+                                <i class="ri-star-fill"></i> {{ rt.average_rating }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="room-card-body">
+                        <h3 class="room-card-title">{{ rt.name }}</h3>
+                        <p class="room-card-desc">{{ rt.description }}</p>
+                        
+                        <div class="room-features">
+                            {% for feature in rt.get_features_list %}
+                                <span class="feature-tag">{{ feature }}</span>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="room-card-footer">
+                            <div class="room-card-price">
+                                ${{ rt.base_price }}<span>/night</span>
+                            </div>
+                            <a href="{% url 'room_detail' rt.id %}{% if searched %}?check_in={{ check_in }}&check_out={{ check_out }}{% endif %}" class="btn btn-secondary btn-sm">
+                                View & Book <i class="ri-arrow-right-line"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-state-icon"><i class="ri-hotel-bed-line"></i></div>
+            <h3>No Rooms Found</h3>
+            <p>We couldn't find any rooms matching your search criteria. Try modifying your dates or guest capacity.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary">View All Rooms</a>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Ensure check-out date is after check-in date
+    const checkInInput = document.getElementById('check_in');
+    const checkOutInput = document.getElementById('check_out');
+    
+    // Set min date of check-in as today
+    const today = new Date().toISOString().split('T')[0];
+    checkInInput.min = today;
+
+    checkInInput.addEventListener('change', () => {
+        if (checkInInput.value) {
+            // Check-out must be at least 1 day after check-in
+            const checkInDate = new Date(checkInInput.value);
+            checkInDate.setDate(checkInDate.getDate() + 1);
+            const minCheckOut = checkInDate.toISOString().split('T')[0];
+            checkOutInput.min = minCheckOut;
+            
+            if (!checkOutInput.value || checkOutInput.value <= checkInInput.value) {
+                checkOutInput.value = minCheckOut;
+            }
+        }
+    });
+</script>
+{% endblock %}

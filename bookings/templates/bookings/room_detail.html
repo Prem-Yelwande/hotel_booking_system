@@ -1,0 +1,336 @@
+{% extends 'bookings/base.html' %}
+{% load static %}
+
+{% block title %}{{ room_type.name }} | HotelHub Hotels{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    
+    <!-- Left Column: Details & Reviews -->
+    <div>
+        <div class="detail-main-image">
+            <img src="{{ room_type.image_url }}" alt="{{ room_type.name }}">
+        </div>
+        
+        <div class="detail-title-row">
+            <h1 class="detail-title">{{ room_type.name }}</h1>
+            <div class="detail-rating">
+                {% if room_type.average_rating > 0 %}
+                    <span class="star-rating"><i class="ri-star-fill"></i> {{ room_type.average_rating }}</span>
+                    <span style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500;">({{ reviews.count }} reviews)</span>
+                {% else %}
+                    <span style="color: var(--text-muted); font-size: 0.95rem; font-weight: 500;"><i class="ri-star-line"></i> No reviews yet</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <p class="detail-desc">{{ room_type.description }}</p>
+
+        <!-- Room Features / Amenities -->
+        <div class="detail-features-section">
+            <h3 class="section-title" style="font-size: 1.5rem; margin-bottom: 1.25rem;">Room Amenities</h3>
+            <div class="detail-features-grid">
+                {% for feature in room_type.get_features_list %}
+                    <div class="detail-feature-item">
+                        <span class="detail-feature-icon">
+                            {% if "WiFi" in feature %}
+                                <i class="ri-wifi-line"></i>
+                            {% elif "View" in feature or "Ocean" in feature or "Scenic" in feature %}
+                                <i class="ri-landscape-line"></i>
+                            {% elif "AC" in feature or "Air" in feature %}
+                                <i class="ri-windy-line"></i>
+                            {% elif "Bar" in feature or "Mini" in feature %}
+                                <i class="ri-cup-line"></i>
+                            {% elif "TV" in feature or "Screen" in feature %}
+                                <i class="ri-tv-line"></i>
+                            {% elif "Pool" in feature or "Infinity" in feature %}
+                                <i class="ri-drop-line"></i>
+                            {% elif "Bed" in feature or "King" in feature or "Queen" in feature %}
+                                <i class="ri-hotel-bed-line"></i>
+                            {% else %}
+                                <i class="ri-checkbox-circle-line"></i>
+                            {% endif %}
+                        </span>
+                        <span>{{ feature }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Reviews Feed -->
+        <div class="reviews-section">
+            <div class="reviews-header">
+                <h3 style="font-size: 1.5rem; font-weight: 700;">Guest Reviews ({{ reviews.count }})</h3>
+                {% if can_review %}
+                    <button class="btn btn-secondary btn-sm" id="open-review-modal-btn">
+                        <i class="ri-chat-smile-2-line"></i> Write a Review
+                    </button>
+                {% endif %}
+            </div>
+
+            {% if reviews %}
+                <div class="reviews-list">
+                    {% for review in reviews %}
+                        <div class="review-item">
+                            <div class="review-meta">
+                                <span class="review-author"><i class="ri-user-smile-line"></i> {{ review.user.username }}</span>
+                                <span class="review-date">{{ review.created_at|date:"F d, Y" }}</span>
+                            </div>
+                            <div class="review-rating">
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= review.rating %}
+                                        <i class="ri-star-fill"></i>
+                                    {% else %}
+                                        <i class="ri-star-line"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <p class="review-text">{{ review.comment }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state" style="padding: 2rem;">
+                    <p style="margin-bottom: 0;">No reviews for this room yet. Be the first to book and share your feedback!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Right Column: Sticky Booking Widget -->
+    <div>
+        <div class="booking-widget-card">
+            <div class="widget-price">
+                ${{ room_type.base_price }}<span>/night</span>
+            </div>
+            
+            <form action="{% url 'create_booking' %}" method="POST" id="booking-form">
+                {% csrf_token %}
+                <input type="hidden" name="room_type_id" value="{{ room_type.id }}">
+                
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                    <label for="widget_check_in"><i class="ri-calendar-check-line"></i> Check-in</label>
+                    <input type="date" id="widget_check_in" name="check_in" class="form-control" required 
+                           value="{{ request.GET.check_in }}" min="{{ today }}">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="widget_check_out"><i class="ri-calendar-close-line"></i> Check-out</label>
+                    <input type="date" id="widget_check_out" name="check_out" class="form-control" required
+                           value="{{ request.GET.check_out }}">
+                </div>
+                
+                <!-- Live Price Calculation View -->
+                <div id="price-calculator-info" style="display: none;">
+                    <div class="widget-totals">
+                        <div class="widget-total-row">
+                            <span id="calc-nights-label">$0.00 x 0 nights</span>
+                            <span id="calc-base-price">$0.00</span>
+                        </div>
+                        <div class="widget-total-row">
+                            <span>Service Fee (10%)</span>
+                            <span id="calc-service-fee">$0.00</span>
+                        </div>
+                        <div class="widget-total-row final">
+                            <span>Total Price</span>
+                            <span id="calc-total-price">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="availability-status" style="margin-top: 1rem; margin-bottom: 1rem; font-weight: 600; font-size: 0.9rem; display: none;">
+                    <!-- Filled by JavaScript -->
+                </div>
+
+                {% if request.user.is_authenticated %}
+                    <button type="submit" class="btn btn-primary btn-full" id="submit-booking-btn" disabled style="margin-top: 1rem;">
+                        <i class="ri-bank-card-line"></i> Book Now
+                    </button>
+                {% else %}
+                    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary btn-full" style="margin-top: 1rem;">
+                        Login to Book
+                    </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Review Modal -->
+{% if can_review %}
+<div class="modal" id="review-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">Write a Review</h3>
+            <button class="alert-close" id="close-review-modal-btn" style="font-size: 1.5rem;">&times;</button>
+        </div>
+        <form action="{% url 'add_review' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="room_type_id" value="{{ room_type.id }}">
+            
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label>Your Rating</label>
+                <div class="rating-select" id="rating-stars">
+                    <span data-value="1"><i class="ri-star-fill"></i></span>
+                    <span data-value="2"><i class="ri-star-fill"></i></span>
+                    <span data-value="3"><i class="ri-star-fill"></i></span>
+                    <span data-value="4"><i class="ri-star-fill"></i></span>
+                    <span data-value="5" class="selected"><i class="ri-star-fill"></i></span>
+                </div>
+                <input type="hidden" name="rating" id="review-rating-input" value="5">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.5rem;">
+                <label for="review-comment">Review Details</label>
+                <textarea name="comment" id="review-comment" class="form-control" rows="4" placeholder="Tell us about your stay, cleanliness, service, facilities..." required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">Submit Review</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const checkInInput = document.getElementById('widget_check_in');
+    const checkOutInput = document.getElementById('widget_check_out');
+    const calcInfo = document.getElementById('price-calculator-info');
+    const labelNights = document.getElementById('calc-nights-label');
+    const basePriceSpan = document.getElementById('calc-base-price');
+    const serviceFeeSpan = document.getElementById('calc-service-fee');
+    const totalPriceSpan = document.getElementById('calc-total-price');
+    const submitBtn = document.getElementById('submit-booking-btn');
+    const statusDiv = document.getElementById('availability-status');
+    
+    const basePrice = parseFloat("{{ room_type.base_price }}");
+    const roomTypeId = "{{ room_type.id }}";
+
+    // Set initial date rules
+    const today = new Date().toISOString().split('T')[0];
+    checkInInput.min = today;
+
+    function checkAvailability() {
+        const checkIn = checkInInput.value;
+        const checkOut = checkOutInput.value;
+
+        if (!checkIn || !checkOut) {
+            calcInfo.style.display = 'none';
+            statusDiv.style.display = 'none';
+            if (submitBtn) submitBtn.disabled = true;
+            return;
+        }
+
+        if (new Date(checkOut) <= new Date(checkIn)) {
+            statusDiv.style.display = 'block';
+            statusDiv.style.color = 'var(--danger)';
+            statusDiv.innerText = 'Check-out date must be after check-in date.';
+            calcInfo.style.display = 'none';
+            if (submitBtn) submitBtn.disabled = true;
+            return;
+        }
+
+        // Fetch availability from API
+        fetch(`/api/check-availability/?check_in=${checkIn}&check_out=${checkOut}&room_type_id=${roomTypeId}`)
+            .then(response => response.json())
+            .then(data => {
+                statusDiv.style.display = 'block';
+                if (data.available) {
+                    statusDiv.style.color = 'var(--success)';
+                    statusDiv.innerHTML = '<i class="ri-checkbox-circle-line"></i> Room is available for these dates!';
+                    
+                    // Show cost breakups
+                    const nights = data.nights;
+                    const rawTotal = data.total_price;
+                    const serviceFee = rawTotal * 0.1;
+                    const finalTotal = rawTotal + serviceFee;
+
+                    labelNights.innerText = `$${basePrice.toFixed(2)} x ${nights} night${nights > 1 ? 's' : ''}`;
+                    basePriceSpan.innerText = `$${rawTotal.toFixed(2)}`;
+                    serviceFeeSpan.innerText = `$${serviceFee.toFixed(2)}`;
+                    totalPriceSpan.innerText = `$${finalTotal.toFixed(2)}`;
+                    
+                    calcInfo.style.display = 'block';
+                    if (submitBtn) submitBtn.disabled = false;
+                } else {
+                    statusDiv.style.color = 'var(--danger)';
+                    statusDiv.innerHTML = `<i class="ri-error-warning-line"></i> ${data.error || 'No rooms available'}`;
+                    calcInfo.style.display = 'none';
+                    if (submitBtn) submitBtn.disabled = true;
+                }
+            })
+            .catch(() => {
+                statusDiv.style.display = 'block';
+                statusDiv.style.color = 'var(--danger)';
+                statusDiv.innerText = 'Error checking room availability.';
+                calcInfo.style.display = 'none';
+                if (submitBtn) submitBtn.disabled = true;
+            });
+    }
+
+    checkInInput.addEventListener('change', () => {
+        // Adjust check_out min date
+        if (checkInInput.value) {
+            const checkInDate = new Date(checkInInput.value);
+            checkInDate.setDate(checkInDate.getDate() + 1);
+            checkOutInput.min = checkInDate.toISOString().split('T')[0];
+            
+            if (!checkOutInput.value || checkOutInput.value <= checkInInput.value) {
+                checkOutInput.value = checkInDate.toISOString().split('T')[0];
+            }
+        }
+        checkAvailability();
+    });
+    
+    checkOutInput.addEventListener('change', checkAvailability);
+
+    // Run availability check on load if date values are pre-filled
+    if (checkInInput.value && checkOutInput.value) {
+        checkAvailability();
+    }
+
+    // Modal Operations
+    const reviewModal = document.getElementById('review-modal');
+    const openReviewBtn = document.getElementById('open-review-modal-btn');
+    const closeReviewBtn = document.getElementById('close-review-modal-btn');
+
+    if (openReviewBtn && reviewModal) {
+        openReviewBtn.addEventListener('click', () => {
+            reviewModal.classList.add('active');
+        });
+        
+        closeReviewBtn.addEventListener('click', () => {
+            reviewModal.classList.remove('active');
+        });
+        
+        // Click outside modal content to close
+        window.addEventListener('click', (e) => {
+            if (e.target === reviewModal) {
+                reviewModal.classList.remove('active');
+            }
+        });
+
+        // Stars Selection Logic
+        const starContainer = document.getElementById('rating-stars');
+        const stars = starContainer.querySelectorAll('span');
+        const ratingInput = document.getElementById('review-rating-input');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const selectedVal = star.getAttribute('data-value');
+                ratingInput.value = selectedVal;
+                
+                stars.forEach(s => {
+                    if (parseInt(s.getAttribute('data-value')) <= parseInt(selectedVal)) {
+                        s.classList.add('selected');
+                    } else {
+                        s.classList.remove('selected');
+                    }
+                });
+            });
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HotelHub Hotels{% endblock %}</title>
+    <!-- Remixicon for premium icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="{% static 'bookings/style.css' %}">
+</head>
+<body>
+    
+    <!-- Messages Container -->
+    <div class="messages-container" id="messages-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert-message {{ message.tags }}">
+                    <span>
+                        {% if message.tags == 'success' %}
+                            <i class="ri-checkbox-circle-fill"></i>
+                        {% elif message.tags == 'error' %}
+                            <i class="ri-error-warning-fill"></i>
+                        {% elif message.tags == 'warning' %}
+                            <i class="ri-alert-fill"></i>
+                        {% else %}
+                            <i class="ri-information-fill"></i>
+                        {% endif %}
+                        {{ message }}
+                    </span>
+                    <button class="alert-close" onclick="this.parentElement.remove()">&times;</button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo-container">
+                <span class="logo-icon"><i class="ri-hotel-line"></i></span>
+                <span>HOTELHUB</span>
+            </a>
+            
+            <nav class="nav-links">
+                <a href="{% url 'home' %}" class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Find Rooms</a>
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">My Bookings</a>
+                {% endif %}
+            </nav>
+
+            <div class="nav-auth">
+                <button class="theme-toggle-btn" id="theme-toggle" title="Toggle Light/Dark Theme">
+                    <i class="ri-moon-line" id="theme-icon"></i>
+                </button>
+                
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="btn btn-secondary btn-sm">
+                        <i class="ri-user-line"></i> {{ request.user.username }}
+                    </a>
+                    <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">
+                        <i class="ri-logout-box-r-line"></i> Logout
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-link">Login</a>
+                    <a href="{% url 'register' %}" class="btn btn-primary btn-sm">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="logo-container" style="margin-bottom: 0.5rem;">
+                <span class="logo-icon"><i class="ri-hotel-line"></i></span>
+                <span>HOTELHUB</span>
+            </div>
+            <p class="footer-copy">&copy; 2026 HotelHub Hotels. Created with Django and passion.</p>
+        </div>
+    </footer>
+
+    <!-- Theme Toggler Script -->
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const htmlElement = document.documentElement;
+
+        // Check for saved theme preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateIcon(newTheme);
+        });
+
+        function updateIcon(theme) {
+            if (theme === 'dark') {
+                themeIcon.className = 'ri-sun-line';
+            } else {
+                themeIcon.className = 'ri-moon-line';
+            }
+        }
+
+        // Auto-dismiss messages after 5 seconds
+        setTimeout(() => {
+            const container = document.getElementById('messages-container');
+            if (container) {
+                const alerts = container.querySelectorAll('.alert-message');
+                alerts.forEach(alert => {
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    alert.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    setTimeout(() => alert.remove(), 500);
+                });
+            }
+        }, 5000);
+    </script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>
