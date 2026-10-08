@@ -31,10 +31,11 @@ HotelHub is a premium, modern, responsive web application for managing room view
    source venv/bin/activate
    ```
 
-3. **Install Django**:
+3. **Install Dependencies**:
    ```bash
    pip install django
    ```
+   > Note: Additional packages may be required depending on the features you use. Install them as needed.
 
 4. **Run Migrations**:
    ```bash
