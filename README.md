@@ -18,7 +18,7 @@ HotelHub is a premium, modern, responsive web application for managing room view
 
 1. **Clone the Repository**:
    ```bash
-   git clone <your-repository-url>
+   git clone https://github.com/Prem-Yelwande/hotel_booking_system.git
    cd hotel_booking_system
    ```
 
@@ -36,6 +36,7 @@ HotelHub is a premium, modern, responsive web application for managing room view
    pip install django
    ```
    > Note: Additional packages may be required depending on the features you use. Install them as needed.
+   > For a reproducible setup, run `pip freeze > requirements.txt` after installing everything you need.
 
 4. **Run Migrations**:
    ```bash
