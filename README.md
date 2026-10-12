@@ -12,6 +12,13 @@ HotelHub is a premium, modern, responsive web application for managing room view
 - **Interactive Reviews**: Allows users who have completed stays to write reviews.
 - **Dark/Light Mode**: Elegant theme toggler that persists guest preferences using LocalStorage.
 
+## Tech Stack
+
+- **Backend**: Django (Python)
+- **Frontend**: HTML, CSS, JavaScript (vanilla)
+- **Database**: SQLite (default; easy to switch to PostgreSQL)
+- **Auth**: Django built-in authentication
+
 ---
 
 ## 🛠️ Setup & Installation
@@ -37,6 +44,7 @@ HotelHub is a premium, modern, responsive web application for managing room view
    ```
    > Note: Additional packages may be required depending on the features you use. Install them as needed.
    > For a reproducible setup, run `pip freeze > requirements.txt` after installing everything you need.
+   > Recommended: Python 3.10+ and Django 4.2+ / 5.x.
 
 4. **Run Migrations**:
    ```bash
@@ -71,3 +79,8 @@ After running `seed_data.py`, you can test the application using:
 - **Customer Bob** (Has upcoming reservations, can cancel bookings):
   - Username: `bob`
   - Password: `bob123`
+
+## Notes
+
+- Static room images live under `bookings/static/bookings/images/`.
+- The project uses the default SQLite database (`db.sqlite3`) which is created on first migrate.
