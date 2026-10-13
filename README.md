@@ -84,3 +84,9 @@ After running `seed_data.py`, you can test the application using:
 
 - Static room images live under `bookings/static/bookings/images/`.
 - The project uses the default SQLite database (`db.sqlite3`) which is created on first migrate.
+
+## Development Tips
+
+- After installing packages, generate `requirements.txt` with `pip freeze > requirements.txt` for better reproducibility across environments.
+- In production, change the default test account passwords and prefer environment variables for any sensitive configuration.
+- SQLite works well for local development; consider PostgreSQL when deploying.
