@@ -91,3 +91,11 @@ After running `seed_data.py`, you can test the application using:
 - In production, change the default test account passwords and prefer environment variables for any sensitive configuration.
 - SQLite works well for local development; consider PostgreSQL when deploying.
 - Always use a virtual environment and pin dependencies for consistent setups across machines.
+
+## Running Tests
+
+```bash
+python manage.py test
+```
+
+This runs the unit tests located in `bookings/tests.py`. Use `python manage.py test bookings` to run only the bookings app tests.
