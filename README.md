@@ -87,7 +87,7 @@ After running `seed_data.py`, you can test the application using:
 
 ## Development Tips
 
-- After installing packages, generate `requirements.txt` with `pip freeze > requirements.txt` for better reproducibility across environments.
+- After installing packages, generate `requirements.txt` with `pip freeze > requirements.txt` for better reproducibility across environments. Commit it to the repo so others can install with `pip install -r requirements.txt`.
 - In production, change the default test account passwords and prefer environment variables for any sensitive configuration.
 - SQLite works well for local development; consider PostgreSQL when deploying.
 - Always use a virtual environment and pin dependencies for consistent setups across machines.
