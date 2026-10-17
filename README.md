@@ -40,7 +40,7 @@ HotelHub is a premium, modern, responsive web application for managing room view
 
 3. **Install Dependencies**:
    ```bash
-   pip install django
+   pip install "django>=4.2,<6"
    ```
    > Note: Additional packages may be required depending on the features you use. Install them as needed.
    > For a reproducible setup, run `pip freeze > requirements.txt` after installing everything you need.
@@ -99,3 +99,7 @@ python manage.py test
 ```
 
 This runs the unit tests located in `bookings/tests.py`. Use `python manage.py test bookings` to run only the bookings app tests.
+
+## Security Note
+
+The test accounts above use simple passwords for local development only. Never use these credentials in production. Always change default passwords and use strong, unique credentials, preferably managed via environment variables or a secrets manager.
