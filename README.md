@@ -83,7 +83,8 @@ After running `seed_data.py`, you can test the application using:
 ## Notes
 
 - Static room images live under `bookings/static/bookings/images/`.
-- The project uses the default SQLite database (`db.sqlite3`) which is created on first migrate.
+- The project uses the default SQLite database (`db.sqlite3`) which is created automatically on the first `migrate`.
+- SQLite is perfect for local development and demos; switch to PostgreSQL for production.
 
 ## Development Tips
 
