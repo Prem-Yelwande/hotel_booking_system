@@ -62,6 +62,8 @@ HotelHub is a premium, modern, responsive web application for managing room view
    python manage.py runserver
    ```
 
+> **Note:** `db.sqlite3` is listed in `.gitignore` and is not committed. After cloning you must always run `migrate` and `seed_data.py` to create a fresh local database.
+
 ---
 
 ## 👤 Test Accounts
