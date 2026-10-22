@@ -94,6 +94,7 @@ After running `seed_data.py`, you can test the application using:
 - In production, change the default test account passwords and prefer environment variables for any sensitive configuration.
 - SQLite works well for local development; consider PostgreSQL when deploying.
 - Always use a virtual environment and pin dependencies for consistent setups across machines.
+- Use `python manage.py createsuperuser` to create additional admin accounts if needed beyond the seeded test users.
 
 ## Running Tests
 
