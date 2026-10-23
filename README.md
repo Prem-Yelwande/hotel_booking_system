@@ -96,6 +96,13 @@ After running `seed_data.py`, you can test the application using:
 - Always use a virtual environment and pin dependencies for consistent setups across machines.
 - Use `python manage.py createsuperuser` to create additional admin accounts if needed beyond the seeded test users.
 
+## Project Structure
+
+- `bookings/` — Django app containing models, views, templates, static files, and tests.
+- `hotel_booking_project/` — Project-level settings, URLs, and WSGI/ASGI configuration.
+- `seed_data.py` — Script that populates the database with realistic sample data for testing.
+- `manage.py` — Django's command-line utility for administrative tasks.
+
 ## Running Tests
 
 ```bash
