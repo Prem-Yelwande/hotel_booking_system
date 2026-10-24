@@ -116,7 +116,12 @@ This runs the unit tests located in `bookings/tests.py`. Use `python manage.py t
 - If you see `ModuleNotFoundError: No module named 'django'`, activate your virtual environment and reinstall Django.
 - For a clean database reset: delete `db.sqlite3`, then re-run `python manage.py migrate` and `python seed_data.py`.
 - Ensure Python 3.10+ is used for best compatibility with Django 4.2+/5.x.
+- If static files are missing in the browser, run `python manage.py collectstatic` (useful when deploying).
 
 ## Security Note
 
 The test accounts above use simple passwords for local development only. Never use these credentials in production. Always change default passwords and use strong, unique credentials, preferably managed via environment variables or a secrets manager.
+
+## Contributing
+
+Contributions are welcome! Small improvements, bug fixes, and documentation updates are appreciated. Please open a pull request with a clear description of the change.
