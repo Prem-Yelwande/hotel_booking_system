@@ -43,7 +43,9 @@ HotelHub is a premium, modern, responsive web application for managing room view
    pip install "django>=4.2,<6"
    ```
    > Note: Additional packages may be required depending on the features you use. Install them as needed.
-   > For a reproducible setup, run `pip freeze > requirements.txt` after installing everything you need.
+   > **Tip:** After installing, generate a lockfile for reproducibility:
+   > `pip freeze > requirements.txt`
+   > Then others can run `pip install -r requirements.txt`.
    > Recommended: Python 3.10+ and Django 4.2+ / 5.x.
 
 4. **Run Migrations**:
