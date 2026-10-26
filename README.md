@@ -23,6 +23,8 @@ HotelHub is a premium, modern, responsive web application for managing room view
 
 ## 🛠️ Setup & Installation
 
+**Recommended:** Python 3.10 or higher.
+
 1. **Clone the Repository**:
    ```bash
    git clone https://github.com/Prem-Yelwande/hotel_booking_system.git
