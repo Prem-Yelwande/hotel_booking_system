@@ -99,6 +99,7 @@ After running `seed_data.py`, you can test the application using:
 - SQLite works well for local development; consider PostgreSQL when deploying.
 - Always use a virtual environment and pin dependencies for consistent setups across machines.
 - Use `python manage.py createsuperuser` to create additional admin accounts if needed beyond the seeded test users.
+- **Production reminder:** Set `DEBUG = False`, configure `ALLOWED_HOSTS`, and use a proper secret key from environment variables before deploying.
 
 ## Project Structure
 
