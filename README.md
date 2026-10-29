@@ -42,13 +42,9 @@ HotelHub is a premium, modern, responsive web application for managing room view
 
 3. **Install Dependencies**:
    ```bash
-   pip install "django>=4.2,<6"
+   pip install -r requirements.txt
    ```
-   > Note: Additional packages may be required depending on the features you use. Install them as needed.
-   > **Tip:** After installing, generate a lockfile for reproducibility:
-   > `pip freeze > requirements.txt`
-   > Then others can run `pip install -r requirements.txt`.
-   > Recommended: Python 3.10+ and Django 4.2+ / 5.x.
+   > The `requirements.txt` pins Django to `>=4.2,<6` for compatibility. Additional packages can be added as needed.
 
 4. **Run Migrations**:
    ```bash
@@ -94,10 +90,9 @@ After running `seed_data.py`, you can test the application using:
 
 ## Development Tips
 
-- After installing packages, generate `requirements.txt` with `pip freeze > requirements.txt` for better reproducibility across environments. Commit it to the repo so others can install with `pip install -r requirements.txt`.
+- Always use a virtual environment and install from `requirements.txt` for consistent setups across machines.
 - In production, change the default test account passwords and prefer environment variables for any sensitive configuration.
 - SQLite works well for local development; consider PostgreSQL when deploying.
-- Always use a virtual environment and pin dependencies for consistent setups across machines.
 - Use `python manage.py createsuperuser` to create additional admin accounts if needed beyond the seeded test users.
 - **Production reminder:** Set `DEBUG = False`, configure `ALLOWED_HOSTS`, and use a proper secret key from environment variables before deploying.
 
@@ -118,7 +113,7 @@ This runs the unit tests located in `bookings/tests.py`. Use `python manage.py t
 
 ## Troubleshooting
 
-- If you see `ModuleNotFoundError: No module named 'django'`, activate your virtual environment and reinstall Django.
+- If you see `ModuleNotFoundError: No module named 'django'`, activate your virtual environment and reinstall from `requirements.txt`.
 - For a clean database reset: delete `db.sqlite3`, then re-run `python manage.py migrate` and `python seed_data.py`.
 - Ensure Python 3.10+ is used for best compatibility with Django 4.2+/5.x.
 - If static files are missing in the browser, run `python manage.py collectstatic` (useful when deploying).
