@@ -1,1 +1,3 @@
+# Django version range for compatibility with the HotelHub booking system.
+# Compatible with Django 4.2 LTS through 5.x.
 django>=4.2,<6
