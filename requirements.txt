@@ -1,3 +1,8 @@
-# Django version range for compatibility with the HotelHub booking system.
-# Compatible with Django 4.2 LTS through 5.x.
+# HotelHub dependencies
+# Django 4.2 LTS is the recommended baseline for long-term support.
+# Upper bound <6 avoids future major breaking changes while allowing 5.x.
+# Install with: pip install -r requirements.txt
 django>=4.2,<6
+
+# Optional (uncomment if you expand media/image features):
+# Pillow>=10.0
