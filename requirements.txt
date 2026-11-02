@@ -1,4 +1,5 @@
 # HotelHub dependencies
+# Recommended: Python 3.10+
 # Django 4.2 LTS is the recommended baseline for long-term support.
 # Upper bound <6 avoids future major breaking changes while allowing 5.x.
 # Install with: pip install -r requirements.txt
