@@ -9,7 +9,8 @@ class RoomType(models.Model):
     capacity = models.PositiveIntegerField(help_text="Maximum occupancy of the room")
     base_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Price per night")
     features = models.TextField(help_text="Comma-separated list of features/amenities")
-    image_url = models.CharField(max_length=255, default="/static/bookings/images/deluxe.jpg")
+    # Default points at the actual PNG asset that ships with the project
+    image_url = models.CharField(max_length=255, default="/static/bookings/images/deluxe.png")
 
     def __str__(self):
         return self.name
