@@ -96,6 +96,7 @@ After running `seed_data.py`, you can test the application using:
 - Use `python manage.py createsuperuser` to create additional admin accounts if needed beyond the seeded test users.
 - Run `python manage.py check` before deploying to catch configuration issues early.
 - **Production reminder:** Set `DEBUG = False`, configure `ALLOWED_HOSTS`, and use a proper secret key from environment variables before deploying.
+- For production, use a WSGI server such as Gunicorn (`gunicorn hotel_booking_project.wsgi`) behind a reverse proxy (Nginx/Caddy) instead of the development server.
 
 ## Project Structure
 
