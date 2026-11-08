@@ -97,6 +97,7 @@ After running `seed_data.py`, you can test the application using:
 - Run `python manage.py check` before deploying to catch configuration issues early.
 - **Production reminder:** Set `DEBUG = False`, configure `ALLOWED_HOSTS`, and use a proper secret key from environment variables before deploying.
 - For production, use a WSGI server such as Gunicorn (`gunicorn hotel_booking_project.wsgi`) behind a reverse proxy (Nginx/Caddy) instead of the development server.
+- After making changes to models, run `python manage.py makemigrations` followed by `migrate`.
 
 ## Project Structure
 
@@ -109,6 +110,8 @@ After running `seed_data.py`, you can test the application using:
 
 ```bash
 python manage.py test
+# For more verbose output:
+python manage.py test --verbosity=2
 ```
 
 This runs the unit tests located in `bookings/tests.py`. Use `python manage.py test bookings` to run only the bookings app tests.
@@ -119,6 +122,7 @@ This runs the unit tests located in `bookings/tests.py`. Use `python manage.py t
 - For a clean database reset: delete `db.sqlite3`, then re-run `python manage.py migrate` and `python seed_data.py`.
 - Ensure Python 3.10+ is used for best compatibility with Django 4.2+/5.x.
 - If static files are missing in the browser, run `python manage.py collectstatic` (useful when deploying).
+- If migrations fail due to conflicts, try `python manage.py migrate --fake-initial` as a last resort after reviewing the migration files.
 
 ## Security Note
 
@@ -126,4 +130,4 @@ The test accounts above use simple passwords for local development only. Never u
 
 ## Contributing
 
-Contributions are welcome! Small improvements, bug fixes, and documentation updates are appreciated. Please open a pull request with a clear description of the change.
+Contributions are welcome! Small improvements, bug fixes, and documentation updates are appreciated. Please open a pull request with a clear description of the change. Run the test suite before submitting.
