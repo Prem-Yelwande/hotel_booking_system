@@ -39,6 +39,7 @@ HotelHub is a premium, modern, responsive web application for managing room view
    # On macOS/Linux:
    source venv/bin/activate
    ```
+   > Always activate the virtual environment before installing packages or running the server.
 
 3. **Install Dependencies**:
    ```bash
@@ -56,6 +57,7 @@ HotelHub is a premium, modern, responsive web application for managing room view
    ```bash
    python seed_data.py
    ```
+   > After seeding, you can immediately run the test suite to verify everything works: `python manage.py test`.
 
 6. **Start the Development Server**:
    ```bash
