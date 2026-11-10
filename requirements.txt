@@ -3,7 +3,11 @@
 # Django 4.2 LTS is the recommended baseline for long-term support.
 # Upper bound <6 avoids future major breaking changes while allowing 5.x.
 # Install with: pip install -r requirements.txt
+#
+# For production deployments consider pinning an exact version after testing.
 django>=4.2,<6
 
 # Optional (uncomment if you expand media/image features):
 # Pillow>=10.0
+#
+# Production tip: also install gunicorn and set DEBUG=False, ALLOWED_HOSTS, and a strong SECRET_KEY via environment variables.
