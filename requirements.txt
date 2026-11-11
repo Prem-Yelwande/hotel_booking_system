@@ -4,6 +4,9 @@
 # Upper bound <6 avoids future major breaking changes while allowing 5.x.
 # Install with: pip install -r requirements.txt
 #
+# Tip: always use a virtual environment (python -m venv .venv && source .venv/bin/activate)
+# before installing to avoid polluting the system Python.
+#
 # For production deployments consider pinning an exact version after testing.
 django>=4.2,<6
 
