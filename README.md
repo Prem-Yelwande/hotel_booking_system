@@ -100,6 +100,8 @@ After running `seed_data.py`, you can test the application using:
 - **Production reminder:** Set `DEBUG = False`, configure `ALLOWED_HOSTS`, and use a proper secret key from environment variables before deploying.
 - For production, use a WSGI server such as Gunicorn (`gunicorn hotel_booking_project.wsgi`) behind a reverse proxy (Nginx/Caddy) instead of the development server.
 - After making changes to models, run `python manage.py makemigrations` followed by `migrate`.
+- Use `python manage.py shell` to interactively explore models and data after seeding.
+- For frontend changes, hard-refresh the browser (Ctrl+Shift+R) to clear cached CSS/JS.
 
 ## Project Structure
 
@@ -125,6 +127,7 @@ This runs the unit tests located in `bookings/tests.py`. Use `python manage.py t
 - Ensure Python 3.10+ is used for best compatibility with Django 4.2+/5.x.
 - If static files are missing in the browser, run `python manage.py collectstatic` (useful when deploying).
 - If migrations fail due to conflicts, try `python manage.py migrate --fake-initial` as a last resort after reviewing the migration files.
+- If forms fail with CSRF errors, ensure templates include `{% csrf_token %}`.
 
 ## Security Note
 
