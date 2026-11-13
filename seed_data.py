@@ -1,3 +1,9 @@
+"""Seed the HotelHub database with sample users, rooms, bookings, and reviews.
+
+Run after migrations to populate a fresh local SQLite database for testing
+and demos. Uses a transaction so the wipe + insert is atomic.
+"""
+
 import os
 import django
 from datetime import date, timedelta
@@ -10,7 +16,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from bookings.models import RoomType, Room, Booking, Review
 
-def seed_database():
+def seed_database() -> None:
     # Deletes and inserts must succeed together. Without this, a later
     # create failure would leave the database empty after the wipe.
     with transaction.atomic():
