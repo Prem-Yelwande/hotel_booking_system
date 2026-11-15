@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
 from datetime import date
+from typing import List
 
 class RoomType(models.Model):
     name = models.CharField(max_length=100)
@@ -12,14 +13,14 @@ class RoomType(models.Model):
     # Default points at the actual PNG asset that ships with the project
     image_url = models.CharField(max_length=255, default="/static/bookings/images/deluxe.png")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.name
 
-    def get_features_list(self):
+    def get_features_list(self) -> List[str]:
         return [f.strip() for f in self.features.split(",") if f.strip()]
 
     @property
-    def average_rating(self):
+    def average_rating(self) -> float:
         reviews = self.reviews.all()
         if not reviews:
             return 0.0
@@ -30,10 +31,10 @@ class Room(models.Model):
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, related_name="rooms")
     is_active = models.BooleanField(default=True, help_text="Whether this room is physically operational")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Room {self.room_number} ({self.room_type.name})"
 
-    def is_available(self, check_in_date, check_out_date):
+    def is_available(self, check_in_date: date, check_out_date: date) -> bool:
         """
         Check if this room is available during the given dates.
         A room is available if there are no bookings that overlap with the range.
@@ -66,16 +67,16 @@ class Booking(models.Model):
     class Meta:
         ordering = ["-check_in"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Booking #{self.id} - Room {self.room.room_number} for {self.user.username}"
 
     @property
-    def duration_nights(self):
+    def duration_nights(self) -> int:
         delta = self.check_out - self.check_in
         return max(delta.days, 1)
 
     @property
-    def can_be_cancelled(self):
+    def can_be_cancelled(self) -> bool:
         # Can only cancel if booking starts in the future and isn't already cancelled
         return self.status in ["Pending", "Confirmed"] and self.check_in > date.today()
 
@@ -89,5 +90,5 @@ class Review(models.Model):
     class Meta:
         ordering = ["-created_at"]
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Review by {self.user.username} on {self.room_type.name} ({self.rating}/5)"
