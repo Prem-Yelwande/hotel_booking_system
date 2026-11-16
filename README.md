@@ -102,6 +102,7 @@ After running `seed_data.py`, you can test the application using:
 - After making changes to models, run `python manage.py makemigrations` followed by `migrate`.
 - Use `python manage.py shell` to interactively explore models and data after seeding.
 - For frontend changes, hard-refresh the browser (Ctrl+Shift+R) to clear cached CSS/JS.
+- **Tip:** Bind the development server to all interfaces with `python manage.py runserver 0.0.0.0:8000` when testing from another device on the same network.
 
 ## Project Structure
 
@@ -128,6 +129,7 @@ This runs the unit tests located in `bookings/tests.py`. Use `python manage.py t
 - If static files are missing in the browser, run `python manage.py collectstatic` (useful when deploying).
 - If migrations fail due to conflicts, try `python manage.py migrate --fake-initial` as a last resort after reviewing the migration files.
 - If forms fail with CSRF errors, ensure templates include `{% csrf_token %}`.
+- If the server fails to start with "address already in use", another process is bound to port 8000. Stop it or use `python manage.py runserver 8001`.
 
 ## Security Note
 
