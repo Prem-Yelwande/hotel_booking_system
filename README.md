@@ -94,6 +94,7 @@ After running `seed_data.py`, you can test the application using:
 
 - Always use a virtual environment and install from `requirements.txt` for consistent setups across machines.
 - In production, change the default test account passwords and prefer environment variables for any sensitive configuration.
+- Prefer setting `SECRET_KEY` and database credentials via environment variables even during local development to build good habits and avoid accidental commits of secrets.
 - SQLite works well for local development; consider PostgreSQL when deploying.
 - Use `python manage.py createsuperuser` to create additional admin accounts if needed beyond the seeded test users.
 - Run `python manage.py check` before deploying to catch configuration issues early.
