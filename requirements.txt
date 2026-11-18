@@ -14,3 +14,9 @@ django>=4.2,<6
 # Pillow>=10.0
 #
 # Production tip: also install gunicorn and set DEBUG=False, ALLOWED_HOSTS, and a strong SECRET_KEY via environment variables.
+
+# After installing dependencies:
+# 1. python manage.py migrate
+# 2. python manage.py createsuperuser   # optional, for admin access
+# 3. python manage.py runserver
+# Then visit http://127.0.0.1:8000/
