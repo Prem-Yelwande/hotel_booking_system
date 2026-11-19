@@ -98,6 +98,7 @@ After running `seed_data.py`, you can test the application using:
 - SQLite works well for local development; consider PostgreSQL when deploying.
 - Use `python manage.py createsuperuser` to create additional admin accounts if needed beyond the seeded test users.
 - Run `python manage.py check` before deploying to catch configuration issues early.
+- **Production readiness:** Run `python manage.py check --deploy` to surface common production misconfigurations (e.g. DEBUG, SECRET_KEY, ALLOWED_HOSTS).
 - **Production reminder:** Set `DEBUG = False`, configure `ALLOWED_HOSTS`, and use a proper secret key from environment variables before deploying.
 - For production, use a WSGI server such as Gunicorn (`gunicorn hotel_booking_project.wsgi`) behind a reverse proxy (Nginx/Caddy) instead of the development server.
 - After making changes to models, run `python manage.py makemigrations` followed by `migrate`.
