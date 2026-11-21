@@ -90,6 +90,7 @@ After running `seed_data.py`, you can test the application using:
 - The project uses the default SQLite database (`db.sqlite3`) which is created automatically on the first `migrate`.
 - SQLite is perfect for local development and demos; switch to PostgreSQL for production.
 - Always back up your database before making major model changes.
+- This project is intended for educational and demonstration purposes only.
 
 ## Development Tips
 
@@ -143,4 +144,4 @@ The test accounts above use simple passwords for local development only. Never u
 Contributions are welcome! Small improvements, bug fixes, and documentation updates are appreciated. Please open a pull request with a clear description of the change. Run the test suite before submitting.
 
 ---
-*Last updated: 2026-11-20*
+*Last updated: 2026-11-21*
