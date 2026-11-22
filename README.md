@@ -63,6 +63,7 @@ HotelHub is a premium, modern, responsive web application for managing room view
    ```bash
    python manage.py runserver
    ```
+   > Tip: If port 8000 is busy, use `python manage.py runserver 8001` (or any free port).
 
 > **Note:** `db.sqlite3` is listed in `.gitignore` and is not committed. After cloning you must always run `migrate` and `seed_data.py` to create a fresh local database.
 
@@ -144,4 +145,4 @@ The test accounts above use simple passwords for local development only. Never u
 Contributions are welcome! Small improvements, bug fixes, and documentation updates are appreciated. Please open a pull request with a clear description of the change. Run the test suite before submitting.
 
 ---
-*Last updated: 2026-11-21*
+*Last updated: 2026-11-22*
