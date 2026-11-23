@@ -108,6 +108,7 @@ After running `seed_data.py`, you can test the application using:
 - Use `python manage.py shell` to interactively explore models and data after seeding.
 - For frontend changes, hard-refresh the browser (Ctrl+Shift+R) to clear cached CSS/JS.
 - **Tip:** Bind the development server to all interfaces with `python manage.py runserver 0.0.0.0:8000` when testing from another device on the same network.
+- **Tip:** Run the test suite (`python manage.py test`) after any code or model changes to catch regressions early.
 
 ## Project Structure
 
@@ -145,4 +146,4 @@ The test accounts above use simple passwords for local development only. Never u
 Contributions are welcome! Small improvements, bug fixes, and documentation updates are appreciated. Please open a pull request with a clear description of the change. Run the test suite before submitting.
 
 ---
-*Last updated: 2026-11-22*
+*Last updated: 2026-11-23*
