@@ -5,6 +5,7 @@ from datetime import date
 from typing import List
 
 class RoomType(models.Model):
+    """Defines a category of room with pricing and features."""
     name = models.CharField(max_length=100)
     description = models.TextField()
     capacity = models.PositiveIntegerField(help_text="Maximum occupancy of the room")
@@ -17,6 +18,7 @@ class RoomType(models.Model):
         return self.name
 
     def get_features_list(self) -> List[str]:
+        """Return features as a cleaned list of strings."""
         return [f.strip() for f in self.features.split(",") if f.strip()]
 
     @property
@@ -27,6 +29,7 @@ class RoomType(models.Model):
         return round(sum(r.rating for r in reviews) / len(reviews), 1)
 
 class Room(models.Model):
+    """Individual physical room belonging to a RoomType."""
     room_number = models.CharField(max_length=20, unique=True)
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, related_name="rooms")
     is_active = models.BooleanField(default=True, help_text="Whether this room is physically operational")
@@ -37,7 +40,7 @@ class Room(models.Model):
     def is_available(self, check_in_date: date, check_out_date: date) -> bool:
         """
         Check if this room is available during the given dates.
-        A room is available if there are no bookings that overlap with the range.
+        A room is available if there are no non-cancelled bookings that overlap with the range.
         Overlap check: booking.check_in < check_out and booking.check_out > check_in
         """
         overlapping_bookings = self.bookings.filter(
@@ -48,6 +51,7 @@ class Room(models.Model):
         return not overlapping_bookings.exists()
 
 class Booking(models.Model):
+    """A reservation of a specific room by a user for a date range."""
     STATUS_CHOICES = [
         ("Pending", "Pending"),
         ("Confirmed", "Confirmed"),
@@ -73,14 +77,15 @@ class Booking(models.Model):
     @property
     def duration_nights(self) -> int:
         delta = self.check_out - self.check_in
-        return max(delta.days, 1)
+        return max(delta.days, 1)  # Ensure at least 1 night
 
     @property
     def can_be_cancelled(self) -> bool:
-        # Can only cancel if booking starts in the future and isn't already cancelled
+        # Can only cancel if booking starts in the future and isn't already cancelled or completed
         return self.status in ["Pending", "Confirmed"] and self.check_in > date.today()
 
 class Review(models.Model):
+    """User review and rating for a room type."""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
     room_type = models.ForeignKey(RoomType, on_delete=models.CASCADE, related_name="reviews")
     rating = models.PositiveIntegerField(default=5)
